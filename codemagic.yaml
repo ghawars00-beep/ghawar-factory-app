@@ -7,12 +7,23 @@ workflows:
     scripts:
       - name: Create Android platform files
         script: |
-          rm -rf test
           flutter create --platforms=android --project-name ghawar_factory_v01 .
+          rm -f test/widget_test.dart
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('android/app/src/main/AndroidManifest.xml')
+          s=p.read_text()
+          marker='<manifest xmlns:android="http://schemas.android.com/apk/res/android">'
+          perms='''<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />\n    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />\n    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />'''
+          if 'android.permission.BLUETOOTH_CONNECT' not in s: s=s.replace(marker, marker+'\n    '+perms)
+          p.write_text(s)
+          PY
       - name: Get Flutter packages
         script: flutter pub get
-      
-      
+      - name: Analyze project
+        script: flutter analyze --no-fatal-infos
+      - name: Verify inventory and permission rules
+        script: flutter test test/store_test.dart
       - name: Build release APK
         script: flutter build apk --release
     artifacts:
