@@ -1,89 +1,1174 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const GhawarApp());
-
-class Product { Product(this.name,this.category,this.pack,{this.weight=''}); String name,category,pack,weight; }
-class LineItem { LineItem(this.name,this.category,{this.status='ط¬ط§ظ‡ط²',this.manager='ط؛ظٹط± ظ…ط­ط¯ط¯',this.quantity=0,this.unit='ظƒط±طھظˆظ†'}); String name,category,status,manager,unit; double quantity; }
-class Warehouse { Warehouse(this.name,{this.quantity=0}); String name; double quantity; }
-class UserItem { UserItem(this.name,this.role,{this.username='',this.password='',this.active=true,this.permissions=const []}); String name,role,username,password; bool active; List<String> permissions; }
-class ProductionEntry { ProductionEntry(this.line,this.product,this.quantity,this.unit,this.date); String line,product,unit,date; double quantity; }
-class Supplier { Supplier(this.name,this.phone); String name,phone; }
-class RawMaterial { RawMaterial(this.name,this.quantity,this.unit); String name,unit; double quantity; }
-class PrinterItem { PrinterItem(this.name,this.type,{this.address='',this.connected=false}); String name,type,address; bool connected; }
-
-class Store extends ChangeNotifier {
-  final categories=<String>['ط§ظ„ط³ظ…ط¨ظˆط³ط© ط§ظ„ظ…ط­ط´ظٹط©','ط±ظ‚ط§ط¦ظ‚ ط§ظ„ط³ظ…ط¨ظˆط³ط©','ط§ظ„ظƒظ†ط§ظپط©','ط®ط¨ط² ط§ظ„ظ…ط±ظ‚ظˆظ‚','ط§ظ„ظ‚ط±طµط§ظ†','ط§ظ„ظ„ط­ظˆط­'];
-  final products=<Product>[
-    Product('ط³ظ…ط¨ظˆط³ط© ظ…ط­ط´ظٹط© ط¨ط§ظ„ط¬ط¨ظ† ط§ظ„ط³ط§ط¦ظ„','ط§ظ„ط³ظ…ط¨ظˆط³ط© ط§ظ„ظ…ط­ط´ظٹط©','100 ط­ط¨ط©/ظƒظٹط³ أ— 5 ط£ظƒظٹط§ط³/ظƒط±طھظˆظ†'),
-    Product('ط³ظ…ط¨ظˆط³ط© ظ…ط­ط´ظٹط© ط¨ط§ظ„ظ„ط­ظ…','ط§ظ„ط³ظ…ط¨ظˆط³ط© ط§ظ„ظ…ط­ط´ظٹط©','100 ط­ط¨ط©/ظƒظٹط³ أ— 5 ط£ظƒظٹط§ط³/ظƒط±طھظˆظ†'),
-    Product('ط³ظ…ط¨ظˆط³ط© ظ…ط­ط´ظٹط© ط¨ط§ظ„ط¯ط¬ط§ط¬','ط§ظ„ط³ظ…ط¨ظˆط³ط© ط§ظ„ظ…ط­ط´ظٹط©','100 ط­ط¨ط©/ظƒظٹط³ أ— 5 ط£ظƒظٹط§ط³/ظƒط±طھظˆظ†'),
-    Product('ط±ظ‚ط§ط¦ظ‚ ط³ظ…ط¨ظˆط³ط© ط؛ظˆط§ط± ظ…ظ‚ط±ظ…ط´','ط±ظ‚ط§ط¦ظ‚ ط§ظ„ط³ظ…ط¨ظˆط³ط©','20 ظƒظٹط³/ظƒط±طھظˆظ†',weight:'800 ط¬ظ…'),
-    Product('ط±ظ‚ط§ط¦ظ‚ ط³ظ…ط¨ظˆط³ط© ط؛ظˆط§ط± ظپط§ط®ط±ط©','ط±ظ‚ط§ط¦ظ‚ ط§ظ„ط³ظ…ط¨ظˆط³ط©','20 ظƒظٹط³/ظƒط±طھظˆظ†',weight:'800 ط¬ظ…'),
-  ];
-  final warehouses=<Warehouse>[Warehouse('ط§ظ„ط«ظ„ط§ط¬ط© ط§ظ„ظ…ط±ظƒط²ظٹط©'),Warehouse('ط«ظ„ط§ط¬ط© ط§ظ„ظ…طµظ†ط¹'),Warehouse('ط§ظ„ظ…ط³طھظˆط¯ط¹ ط§ظ„ط®ط§ط±ط¬ظٹ'),Warehouse('ظ…ط³طھظˆط¯ط¹ ط§ظ„ظ…ط¹ظ…ظ„')];
-  final users=<UserItem>[UserItem('ظ…ط¯ظٹط± ط§ظ„ط¨ط±ظ†ط§ظ…ط¬ ط§ظ„ط±ط¦ظٹط³ظٹ','ظ…ط¯ظٹط± ط±ط¦ظٹط³ظٹ',username:'admin',password:'Ghawar@2026',permissions:['ط§ظ„ظƒظ„'])];
-  final suppliers=<Supplier>[];
-  final rawMaterials=<RawMaterial>[];
-  final printers=<PrinterItem>[];
-  final lines=<LineItem>[];
-  final production=<ProductionEntry>[];
-  Store(){for(var i=1;i<=100;i++)lines.add(LineItem('ط®ط· ${i.toString().padLeft(3,'0')}','ط§ظ„ط³ظ…ط¨ظˆط³ط© ط§ظ„ظ…ط­ط´ظٹط©'));for(var i=1;i<=15;i++)lines.add(LineItem('ط±ظ‚ط§ط¦ظ‚ ${i.toString().padLeft(2,'0')}','ط±ظ‚ط§ط¦ظ‚ ط§ظ„ط³ظ…ط¨ظˆط³ط©'));for(final c in categories.skip(2))for(var i=1;i<=5;i++)lines.add(LineItem('$c ${i.toString().padLeft(2,'0')}',c));}
-  void changed()=>notifyListeners();
-  void addLine(LineItem x){lines.add(x);notifyListeners();}
-  void addProduction(ProductionEntry x,LineItem line){production.add(x);line.quantity+=x.quantity;notifyListeners();}
+void main() {
+  runApp(const GhawarApp());
 }
 
-class GhawarApp extends StatefulWidget{const GhawarApp({super.key});@override State<GhawarApp> createState()=>_GhawarAppState();}
-class _GhawarAppState extends State<GhawarApp>{final store=Store();@override Widget build(BuildContext context)=>MaterialApp(debugShowCheckedModeBanner:false,title:'ظ…طµظ†ط¹ ط؛ظˆط§ط±',theme:ThemeData(useMaterial3:true,colorSchemeSeed:const Color(0xff8d151b),fontFamily:null),builder:(context,child)=>Directionality(textDirection:TextDirection.rtl,child:child!),home:LoginPage(store));}
+class GhawarApp extends StatelessWidget {
+  const GhawarApp({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'مصنع الغوار',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFB71C1C)),
+        scaffoldBackgroundColor: const Color(0xFFF7F4EE),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFB71C1C),
+          foregroundColor: Colors.white,
+          centerTitle: true,
+        ),
+      ),
+      home: const LoginPage(),
+    );
+  }
+}
+
+class AppUser {
+  AppUser({
+    required this.name,
+    required this.username,
+    required this.password,
+    required this.role,
+    this.active = true,
+  });
+
+  String name;
+  String username;
+  String password;
+  String role;
+  bool active;
+}
+
+class ProductionSection {
+  ProductionSection({
+    required this.name,
+    required this.lines,
+    required this.icon,
+  });
+
+  String name;
+  int lines;
+  IconData icon;
+}
+
+class Warehouse {
+  Warehouse(this.name, this.stock);
+  String name;
+  int stock;
+}
+
+class ProductItem {
+  ProductItem(this.name, this.packaging);
+  String name;
+  String packaging;
+}
 
 class LoginPage extends StatefulWidget {
-  const LoginPage(this.store,{super.key}); final Store store;
-  @override State<LoginPage> createState()=>_LoginPageState();
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
 }
-class _LoginPageState extends State<LoginPage>{
-  final user=TextEditingController(text:'admin'); final pass=TextEditingController();
-  bool hide=true; int failures=0; String error='';
-  void login(){
-    UserItem? found;
-    for(final u in widget.store.users){if(u.username==user.text.trim()){found=u;break;}}
-    if(found!=null && found.active && found.password==pass.text){
-      Navigator.pushReplacement(context,MaterialPageRoute(builder:(_)=>Home(widget.store)));
-    }else{setState((){failures++;error=failures>=5?'ظ…ط­ط§ظˆظ„ط§طھ ط¯ط®ظˆظ„ ط®ط§ط·ط¦ط© ظ…طھط¹ط¯ط¯ط©. ط±ط§ط¬ط¹ ظ…ط¯ظٹط± ط§ظ„ط¨ط±ظ†ط§ظ…ط¬.':'ط§ط³ظ… ط§ظ„ظ…ط³طھط®ط¯ظ… ط£ظˆ ظƒظ„ظ…ط© ط§ظ„ظ…ط±ظˆط± ط؛ظٹط± طµط­ظٹط­ط©';});}
+
+class _LoginPageState extends State<LoginPage> {
+  final usernameController = TextEditingController(text: 'admin');
+  final passwordController = TextEditingController(text: 'Ghawar@2026');
+  int failedAttempts = 0;
+  bool obscure = true;
+  String? error;
+
+  void login() {
+    final user = usernameController.text.trim();
+    final pass = passwordController.text;
+    if (user == 'admin' && pass == 'Ghawar@2026') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomePage()),
+      );
+      return;
+    }
+    setState(() {
+      failedAttempts++;
+      error = failedAttempts >= 5
+          ? 'تم إيقاف المحاولة مؤقتًا. راجع مدير النظام.'
+          : 'اسم المستخدم أو كلمة المرور غير صحيحة.';
+    });
   }
-  @override Widget build(BuildContext c)=>Scaffold(body:Directionality(textDirection:TextDirection.rtl,child:Center(child:SingleChildScrollView(padding:const EdgeInsets.all(24),child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:430),child:Card(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[
-    const CircleAvatar(radius:42,backgroundColor:Color(0xff8d151b),child:Icon(Icons.factory,color:Colors.white,size:44)),const SizedBox(height:14),
-    const Text('ط؛ظˆط§ط± ط§ظ„ط£طµظ„ظٹط©',style:TextStyle(fontSize:28,fontWeight:FontWeight.bold)),const Text('ظ†ط¸ط§ظ… ط¥ط¯ط§ط±ط© ظ…طµظ†ط¹ ط§ظ„ظ…ط¹ط¬ظ†ط§طھ ظˆط§ظ„ط­ظ„ظˆظٹط§طھ'),const SizedBox(height:22),
-    TextField(controller:user,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„ظ…ط³طھط®ط¯ظ…',border:OutlineInputBorder(),prefixIcon:Icon(Icons.person))),const SizedBox(height:12),
-    TextField(controller:pass,obscureText:hide,onSubmitted:(_)=>login(),decoration:InputDecoration(labelText:'ظƒظ„ظ…ط© ط§ظ„ظ…ط±ظˆط±',border:const OutlineInputBorder(),prefixIcon:const Icon(Icons.lock),suffixIcon:IconButton(onPressed:()=>setState(()=>hide=!hide),icon:Icon(hide?Icons.visibility:Icons.visibility_off)))),
-    if(error.isNotEmpty)...[const SizedBox(height:8),Text(error,style:const TextStyle(color:Colors.red))],const SizedBox(height:16),
-    SizedBox(width:double.infinity,child:FilledButton.icon(onPressed:login,icon:const Icon(Icons.login),label:const Padding(padding:EdgeInsets.all(12),child:Text('طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„')))),
-    const SizedBox(height:10),const Text('ظ„ظ„ط§ط®طھط¨ط§ط± ط§ظ„ط£ظˆظ„ ظپظ‚ط·: admin / Ghawar@2026',style:TextStyle(fontSize:12,color:Colors.grey))
-  ]))))))));
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 430),
+                child: Card(
+                  elevation: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 92,
+                          height: 92,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFB71C1C),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: const Color(0xFFD4AF37),
+                              width: 3,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.factory,
+                            size: 50,
+                            color: Color(0xFFD4AF37),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'غوار الأصلية',
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF8B0000),
+                          ),
+                        ),
+                        const Text('نظام إدارة المصنع'),
+                        const SizedBox(height: 24),
+                        TextField(
+                          controller: usernameController,
+                          decoration: const InputDecoration(
+                            labelText: 'اسم المستخدم',
+                            prefixIcon: Icon(Icons.person),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        TextField(
+                          controller: passwordController,
+                          obscureText: obscure,
+                          onSubmitted: (_) => login(),
+                          decoration: InputDecoration(
+                            labelText: 'كلمة المرور',
+                            prefixIcon: const Icon(Icons.lock),
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              onPressed: () =>
+                                  setState(() => obscure = !obscure),
+                              icon: Icon(
+                                obscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (error != null) ...[
+                          const SizedBox(height: 12),
+                          Text(
+                            error!,
+                            style: const TextStyle(color: Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                        const SizedBox(height: 18),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            onPressed: failedAttempts >= 5 ? null : login,
+                            icon: const Icon(Icons.login),
+                            label: const Padding(
+                              padding: EdgeInsets.all(13),
+                              child: Text('دخول المدير'),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'نسخة تجريبية محلية - صلاحيات المدير كاملة',
+                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class Home extends StatefulWidget{const Home(this.store,{super.key});final Store store;@override State<Home> createState()=>_HomeState();}
-class _HomeState extends State<Home>{int tab=0;@override Widget build(BuildContext c){final pages=[Dashboard(widget.store),LinesPage(widget.store),WarehousesPage(widget.store),ProductsPage(widget.store),ManagementPage(widget.store)];return Scaffold(appBar:AppBar(backgroundColor:const Color(0xff8d151b),foregroundColor:Colors.white,title:const Text('ط؛ظˆط§ط± ط§ظ„ط£طµظ„ظٹط© â€¢ ط¥ط¯ط§ط±ط© ط§ظ„ظ…طµظ†ط¹')),body:pages[tab],bottomNavigationBar:NavigationBar(selectedIndex:tab,onDestinationSelected:(v)=>setState(()=>tab=v),destinations:const [NavigationDestination(icon:Icon(Icons.dashboard),label:'ط§ظ„ط±ط¦ظٹط³ظٹط©'),NavigationDestination(icon:Icon(Icons.precision_manufacturing),label:'ط§ظ„ط¥ظ†طھط§ط¬'),NavigationDestination(icon:Icon(Icons.warehouse),label:'ط§ظ„ظ…ط®ط²ظˆظ†'),NavigationDestination(icon:Icon(Icons.inventory_2),label:'ط§ظ„ط£طµظ†ط§ظپ'),NavigationDestination(icon:Icon(Icons.settings),label:'ط§ظ„ط¥ط¯ط§ط±ط©')]));}}
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-class Dashboard extends StatelessWidget{const Dashboard(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>ListView(padding:const EdgeInsets.all(16),children:[const Text('ظ„ظˆط­ط© ط¥ط¯ط§ط±ط© ط§ظ„ظ…طµظ†ط¹',style:TextStyle(fontSize:27,fontWeight:FontWeight.bold)),Wrap(spacing:8,runSpacing:8,children:[Stat('ط®ط·ظˆط· ط§ظ„ط¥ظ†طھط§ط¬','${s.lines.length}',Icons.precision_manufacturing),Stat('ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ','${s.warehouses.length}',Icons.warehouse),Stat('ط§ظ„ظ…ط³طھط®ط¯ظ…ظˆظ†','${s.users.length}',Icons.people),Stat('ط³ط¬ظ„ط§طھ ط§ظ„ط¥ظ†طھط§ط¬','${s.production.length}',Icons.assignment)]),const SizedBox(height:15),const Text('ط£ظ‚ط³ط§ظ… ط§ظ„ط¥ظ†طھط§ط¬',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),...s.categories.map((x)=>Card(child:ListTile(leading:const CircleAvatar(child:Icon(Icons.factory)),title:Text(x,style:const TextStyle(fontWeight:FontWeight.bold)),subtitle:Text('${s.lines.where((e)=>e.category==x).length} ط®ط· ط¥ظ†طھط§ط¬'),trailing:const Icon(Icons.chevron_left),onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>CategoryPage(s,x)))))]));}
-class Stat extends StatelessWidget{const Stat(this.t,this.v,this.i,{super.key});final String t,v;final IconData i;@override Widget build(BuildContext c)=>Card(child:Padding(padding:const EdgeInsets.all(14),child:Row(mainAxisSize:MainAxisSize.min,children:[Icon(i),const SizedBox(width:8),Column(children:[Text(v,style:const TextStyle(fontSize:22,fontWeight:FontWeight.bold)),Text(t)])])));}
-class CategoryPage extends StatelessWidget{const CategoryPage(this.s,this.cat,{super.key});final Store s;final String cat;@override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:Text(cat)),body:AnimatedBuilder(animation:s,builder:(_,__)=>ListView(children:s.lines.where((x)=>x.category==cat).map((x)=>ListTile(title:Text(x.name),subtitle:Text('ط§ظ„ظ…ط³ط¤ظˆظ„: ${x.manager} â€¢ ط§ظ„ط¥ظ†طھط§ط¬: ${x.quantity.toStringAsFixed(0)} ${x.unit}'),trailing:const Icon(Icons.chevron_left),onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>LineDetails(s,x))))).toList())));}
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
-class LinesPage extends StatefulWidget{const LinesPage(this.s,{super.key});final Store s;@override State<LinesPage> createState()=>_LinesPageState();}
-class _LinesPageState extends State<LinesPage>{String? filter;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:widget.s,builder:(_,__){final list=filter==null?widget.s.lines:widget.s.lines.where((x)=>x.category==filter).toList();return ListView(padding:const EdgeInsets.all(12),children:[Row(children:[const Expanded(child:Text('ط®ط·ظˆط· ط§ظ„ط¥ظ†طھط§ط¬',style:TextStyle(fontSize:26,fontWeight:FontWeight.bold))),FilledButton.icon(onPressed:()=>addLine(c),icon:const Icon(Icons.add),label:const Text('ط¥ط¶ط§ظپط© ط®ط·'))]),DropdownButtonFormField<String>(value:filter,decoration:const InputDecoration(labelText:'ط§ظ„ظ‚ط³ظ…'),items:[const DropdownMenuItem<String>(value:null,child:Text('ظƒظ„ ط§ظ„ط£ظ‚ط³ط§ظ…')),...widget.s.categories.map((x)=>DropdownMenuItem(value:x,child:Text(x)))],onChanged:(v)=>setState(()=>filter=v)),...list.map((x)=>Card(child:ListTile(title:Text(x.name),subtitle:Text('${x.category} â€¢ ${x.manager}'),trailing:const Icon(Icons.chevron_left),onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>LineDetails(widget.s,x)))))]);});void addLine(BuildContext c){final n=TextEditingController();String cat=widget.s.categories.first;showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ط®ط· ط¥ظ†طھط§ط¬'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„ط®ط·')),DropdownButtonFormField(value:cat,items:widget.s.categories.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>cat=v!),decoration:const InputDecoration(labelText:'ط§ظ„ظ‚ط³ظ…'))]),actions:[TextButton(onPressed:()=>Navigator.pop(d),child:const Text('ط¥ظ„ط؛ط§ط،')),FilledButton(onPressed:(){if(n.text.trim().isNotEmpty)widget.s.addLine(LineItem(n.text.trim(),cat));Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
+class _HomePageState extends State<HomePage> {
+  int pageIndex = 0;
 
-class LineDetails extends StatelessWidget{const LineDetails(this.s,this.line,{super.key});final Store s;final LineItem line;@override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:Text(line.name)),body:AnimatedBuilder(animation:s,builder:(_,__)=>ListView(padding:const EdgeInsets.all(16),children:[Card(child:ListTile(title:Text(line.category),subtitle:Text('ط§ظ„ط­ط§ظ„ط©: ${line.status}\nط§ظ„ظ…ط³ط¤ظˆظ„: ${line.manager}\nط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ط¥ظ†طھط§ط¬: ${line.quantity.toStringAsFixed(0)} ${line.unit}'),isThreeLine:true)),FilledButton.icon(onPressed:()=>addProduction(c),icon:const Icon(Icons.add_chart),label:const Text('ط¥ط¶ط§ظپط© ظƒظ…ظٹط© ط¥ظ†طھط§ط¬')),const SizedBox(height:8),OutlinedButton.icon(onPressed:()=>editManager(c),icon:const Icon(Icons.person),label:const Text('طھط­ط¯ظٹط¯ ظ…ط¯ظٹط± / ظ…ط³ط¤ظˆظ„ ط§ظ„ط®ط·')),const SizedBox(height:16),const Text('ط³ط¬ظ„ ط¥ظ†طھط§ط¬ ط§ظ„ط®ط·',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),...s.production.where((e)=>e.line==line.name).map((e)=>Card(child:ListTile(title:Text(e.product),subtitle:Text('${e.quantity.toStringAsFixed(0)} ${e.unit} â€¢ ${e.date}'))))])));void addProduction(BuildContext c){final q=TextEditingController();final choices=s.products.where((p)=>p.category==line.category).map((p)=>p.name).toList();if(choices.isEmpty)choices.add('ط¥ظ†طھط§ط¬ ط¹ط§ظ…');String product=choices.first;showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('طھط³ط¬ظٹظ„ ظƒظ…ظٹط© ط¥ظ†طھط§ط¬'),content:Column(mainAxisSize:MainAxisSize.min,children:[DropdownButtonFormField(value:product,items:choices.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>product=v!),decoration:const InputDecoration(labelText:'ط§ظ„طµظ†ظپ')),TextField(controller:q,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'ط§ظ„ظƒظ…ظٹط©')),DropdownButtonFormField(value:line.unit,items:['ظƒط±طھظˆظ†','ظƒظٹط³','ط­ط¨ط©','ظƒط¬ظ…'].map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v){line.unit=v!;},decoration:const InputDecoration(labelText:'ط§ظ„ظˆط­ط¯ط©'))]),actions:[FilledButton(onPressed:(){final n=double.tryParse(q.text);if(n!=null&&n>0){final now=DateTime.now();s.addProduction(ProductionEntry(line.name,product,n,line.unit,'${now.year}/${now.month}/${now.day}'),line);Navigator.pop(d);}},child:const Text('ط­ظپط¸ ط§ظ„ظƒظ…ظٹط©'))])));}void editManager(BuildContext c){String manager=line.manager;final names=['ط؛ظٹط± ظ…ط­ط¯ط¯',...s.users.where((u)=>u.active).map((u)=>u.name)];showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ظ…ط³ط¤ظˆظ„ ط§ظ„ط®ط·'),content:DropdownButtonFormField(value:names.contains(manager)?manager:'ط؛ظٹط± ظ…ط­ط¯ط¯',items:names.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>manager=v!),decoration:const InputDecoration(labelText:'ط§ط®طھط± ط§ظ„ظ…ط³ط¤ظˆظ„')),actions:[FilledButton(onPressed:(){line.manager=manager;s.changed();Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
+  final sections = <ProductionSection>[
+    ProductionSection(
+      name: 'السمبوسة المحشية',
+      lines: 100,
+      icon: Icons.restaurant_menu,
+    ),
+    ProductionSection(
+      name: 'رقائق السمبوسة',
+      lines: 15,
+      icon: Icons.layers,
+    ),
+    ProductionSection(name: 'الكنافة', lines: 5, icon: Icons.cake),
+    ProductionSection(
+      name: 'خبز المرقوق',
+      lines: 5,
+      icon: Icons.bakery_dining,
+    ),
+    ProductionSection(name: 'القرصان', lines: 5, icon: Icons.flatware),
+    ProductionSection(name: 'اللحوح', lines: 5, icon: Icons.breakfast_dining),
+  ];
 
-class WarehousesPage extends StatelessWidget{const WarehousesPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>ListView(padding:const EdgeInsets.all(12),children:[const Text('ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ ظˆط§ظ„طھط­ظˆظٹظ„',style:TextStyle(fontSize:25,fontWeight:FontWeight.bold)),...s.warehouses.map((w)=>Card(child:ListTile(leading:const Icon(Icons.warehouse),title:Text(w.name),subtitle:Text('ط§ظ„ط±طµظٹط¯ ط§ظ„ط¹ط§ظ…: ${w.quantity.toStringAsFixed(0)}'),trailing:PopupMenuButton(itemBuilder:(_)=>const [PopupMenuItem(value:1,child:Text('ط¥ط¶ط§ظپط© ظƒظ…ظٹط©')),PopupMenuItem(value:2,child:Text('طھط­ظˆظٹظ„ ظ„ظ…ط³طھظˆط¯ط¹'))],onSelected:(v)=>v==1?quantity(c,w):transfer(c,w))))]));void quantity(BuildContext c,Warehouse w){final q=TextEditingController();showDialog(context:c,builder:(d)=>AlertDialog(title:Text('ط¥ط¶ط§ظپط© ظƒظ…ظٹط© â€¢ ${w.name}'),content:TextField(controller:q,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'ط§ظ„ظƒظ…ظٹط©')),actions:[FilledButton(onPressed:(){final n=double.tryParse(q.text);if(n!=null){w.quantity+=n;s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))]));}void transfer(BuildContext c,Warehouse from){final q=TextEditingController();Warehouse to=s.warehouses.firstWhere((x)=>x!=from,orElse:()=>from);showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('طھط­ظˆظٹظ„ ط¨ظٹظ† ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ'),content:Column(mainAxisSize:MainAxisSize.min,children:[DropdownButtonFormField(value:to,items:s.warehouses.where((x)=>x!=from).map((x)=>DropdownMenuItem(value:x,child:Text(x.name))).toList(),onChanged:(v)=>setD(()=>to=v!),decoration:const InputDecoration(labelText:'ط¥ظ„ظ‰')),TextField(controller:q,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'ط§ظ„ظƒظ…ظٹط©'))]),actions:[FilledButton(onPressed:(){final n=double.tryParse(q.text);if(n!=null&&n>0&&from.quantity>=n){from.quantity-=n;to.quantity+=n;s.changed();Navigator.pop(d);}},child:const Text('طھط­ظˆظٹظ„'))])));}}
+  final warehouses = <Warehouse>[
+    Warehouse('الثلاجة المركزية', 1250),
+    Warehouse('ثلاجة المصنع', 820),
+    Warehouse('المستودع الخارجي', 640),
+    Warehouse('مستودع المعمل', 390),
+  ];
 
-class ProductsPage extends StatelessWidget{const ProductsPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>ListView(padding:const EdgeInsets.all(12),children:[Row(children:[const Expanded(child:Text('ط§ظ„ط£طµظ†ط§ظپ',style:TextStyle(fontSize:25,fontWeight:FontWeight.bold))),FilledButton.icon(onPressed:()=>add(c),icon:const Icon(Icons.add),label:const Text('ط¥ط¶ط§ظپط©'))]),...s.products.map((p)=>Card(child:ListTile(title:Text(p.name),subtitle:Text('${p.category} â€¢ ${p.weight} â€¢ ${p.pack}'))))]));void add(BuildContext c){final n=TextEditingController();String cat=s.categories.first;showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© طµظ†ظپ'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„طµظ†ظپ')),DropdownButtonFormField(value:cat,items:s.categories.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>cat=v!),decoration:const InputDecoration(labelText:'ط§ظ„ظ‚ط³ظ…'))]),actions:[FilledButton(onPressed:(){if(n.text.trim().isNotEmpty){s.products.add(Product(n.text.trim(),cat,'ظٹط­ط¯ط¯ ظ„ط§ط­ظ‚ط§ظ‹'));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
+  final products = <ProductItem>[
+    ProductItem('سمبوسة محشية بالجبن السائل', '100 حبة بالكيس - 5 أكياس بالكرتون'),
+    ProductItem('سمبوسة محشية باللحم', '100 حبة بالكيس - 5 أكياس بالكرتون'),
+    ProductItem('سمبوسة محشية بالدجاج', '100 حبة بالكيس - 5 أكياس بالكرتون'),
+    ProductItem('سمبوسة محشية بالجبن الأبيض فيتا', '100 حبة بالكيس - 5 أكياس بالكرتون'),
+    ProductItem('سمبوسة محشية بالجبن الشدر', '100 حبة بالكيس - 5 أكياس بالكرتون'),
+    ProductItem('سمبوسة محشية باللحم (حراق)', '100 حبة بالكيس - 5 أكياس بالكرتون'),
+    ProductItem('سمبوسة محشية بالدجاج (حراق)', '100 حبة بالكيس - 5 أكياس بالكرتون'),
+    ProductItem('رقائق سمبوسة غوار مقرمش 800 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق سمبوسة غوار بر 800 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق سمبوسة غوار فاخرة 800 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق سمبوسة غوار فاخرة ميني 800 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق غوار مدور 400 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق غوار مثلث 400 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق غوار مطبق 800 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق سمبوسة ريفي 500 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق سمبوسة ميتاف 500 جرام', '20 كيس بالكرتون'),
+    ProductItem('رقائق سمبوسة سابوسا 800 جرام', '20 كيس بالكرتون'),
+  ];
 
-class ManagementPage extends StatelessWidget{const ManagementPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>ListView(padding:const EdgeInsets.all(12),children:[const Text('ط§ظ„ط¥ط¯ط§ط±ط© ظˆط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ',style:TextStyle(fontSize:26,fontWeight:FontWeight.bold)),Tile('ط§ظ„ظ…ط³طھط®ط¯ظ…ظˆظ† ظˆط§ظ„طµظ„ط§ط­ظٹط§طھ',Icons.manage_accounts,()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>UsersPage(s)))),Tile('ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ط®ط§ظ…',Icons.grain,()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>RawMaterialsPage(s)))),Tile('ط§ظ„ظ…ظˆط±ط¯ظˆظ†',Icons.local_shipping,()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>SuppliersPage(s)))),Tile('ط§ظ„ط·ط§ط¨ط¹ط§طھ ظˆ Wiâ€‘Fi ظˆ Bluetooth',Icons.print,()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>PrintersPage(s))))]);}
-class Tile extends StatelessWidget{const Tile(this.t,this.i,this.tap,{super.key});final String t;final IconData i;final VoidCallback tap;@override Widget build(BuildContext c)=>Card(child:ListTile(leading:Icon(i),title:Text(t),trailing:const Icon(Icons.chevron_left),onTap:tap));}
+  final users = <AppUser>[
+    AppUser(
+      name: 'مدير البرنامج الرئيسي',
+      username: 'admin',
+      password: 'Ghawar@2026',
+      role: 'مدير رئيسي - جميع الصلاحيات',
+    ),
+    AppUser(
+      name: 'مسؤول السمبوسة المحشية',
+      username: 'stuffed.manager',
+      password: '123456',
+      role: 'إنتاج',
+    ),
+    AppUser(
+      name: 'مسؤول رقائق السمبوسة',
+      username: 'sheets.manager',
+      password: '123456',
+      role: 'إنتاج',
+    ),
+    AppUser(
+      name: 'مسؤول المستودع المركزي',
+      username: 'warehouse.manager',
+      password: '123456',
+      role: 'مستودعات',
+    ),
+  ];
 
-class UsersPage extends StatelessWidget{const UsersPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>Scaffold(appBar:AppBar(title:const Text('ط§ظ„ظ…ط³طھط®ط¯ظ…ظˆظ† ظˆط§ظ„طµظ„ط§ط­ظٹط§طھ')),body:ListView(padding:const EdgeInsets.all(12),children:[FilledButton.icon(onPressed:()=>add(c),icon:const Icon(Icons.person_add),label:const Text('ط¥ط¶ط§ظپط© ظ…ط³طھط®ط¯ظ… / ظ…ط¯ظٹط±')),...s.users.map((u)=>Card(child:SwitchListTile(value:u.active,onChanged:(v){u.active=v;s.changed();},title:Text(u.name),subtitle:Text('${u.role}\nط§ظ„طµظ„ط§ط­ظٹط§طھ: ${u.permissions.isEmpty?'ظ„ظ… طھط­ط¯ط¯':u.permissions.join('طŒ ')}'),secondary:const Icon(Icons.manage_accounts))))])));void add(BuildContext c){final n=TextEditingController(),un=TextEditingController(),pw=TextEditingController();String role='ظ…ط³ط¤ظˆظ„';final roles=['ظ…ط¯ظٹط± ط±ط¦ظٹط³ظٹ','ظ…ط¯ظٹط± طھطµظ†ظٹط¹','ظ…ط¯ظٹط± ظ‚ط³ظ…','ظ…ط³ط¤ظˆظ„ ظ…ط³طھظˆط¯ط¹','ظ…ط³ط¤ظˆظ„ ط¹ظ…ط§ظ„','ظ…ظ†ط¯ظˆط¨','ظ…ط³ط¤ظˆظ„'];final all=['ط§ظ„ط¥ظ†طھط§ط¬','ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ','ط§ظ„ط£طµظ†ط§ظپ','ط§ظ„ظ…ط³طھط®ط¯ظ…ظˆظ†','ط§ظ„ظ…ظˆط±ط¯ظˆظ†','ط§ظ„ط·ط§ط¨ط¹ط§طھ'];final selected=<String>[];showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ظ…ط³طھط®ط¯ظ… / ظ…ط¯ظٹط±'),content:SingleChildScrollView(child:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ظ„ط§ط³ظ… ط§ظ„ظƒط§ظ…ظ„')),TextField(controller:un,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„ط¯ط®ظˆظ„')),TextField(controller:pw,obscureText:true,decoration:const InputDecoration(labelText:'ظƒظ„ظ…ط© ط§ظ„ظ…ط±ظˆط±')),DropdownButtonFormField(value:role,items:roles.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>role=v!),decoration:const InputDecoration(labelText:'ط§ظ„ط¯ظˆط±')),...all.map((p)=>CheckboxListTile(value:selected.contains(p),title:Text(p),onChanged:(v)=>setD(()=>v!?selected.add(p):selected.remove(p))))])),actions:[FilledButton(onPressed:(){if(n.text.trim().isNotEmpty){s.users.add(UserItem(n.text.trim(),role,username:un.text.trim(),password:pw.text,permissions:List.of(selected)));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
+  void snack(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(text)),
+    );
+  }
 
-class RawMaterialsPage extends StatelessWidget{const RawMaterialsPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>Scaffold(appBar:AppBar(title:const Text('ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ط®ط§ظ…')),floatingActionButton:FloatingActionButton(onPressed:()=>add(c),child:const Icon(Icons.add)),body:ListView(children:s.rawMaterials.map((x)=>ListTile(title:Text(x.name),subtitle:Text('${x.quantity} ${x.unit}'))).toList())));void add(BuildContext c){final n=TextEditingController(),q=TextEditingController();showDialog(context:c,builder:(d)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ظ…ط§ط¯ط© ط®ط§ظ…'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ظ„ظ…ط§ط¯ط©')),TextField(controller:q,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'ط§ظ„ظƒظ…ظٹط©'))]),actions:[FilledButton(onPressed:(){final v=double.tryParse(q.text)??0;if(n.text.isNotEmpty){s.rawMaterials.add(RawMaterial(n.text,v,'ظƒط¬ظ…'));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))]));}}
-class SuppliersPage extends StatelessWidget{const SuppliersPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>Scaffold(appBar:AppBar(title:const Text('ط§ظ„ظ…ظˆط±ط¯ظˆظ†')),floatingActionButton:FloatingActionButton(onPressed:()=>add(c),child:const Icon(Icons.add)),body:ListView(children:s.suppliers.map((x)=>ListTile(title:Text(x.name),subtitle:Text(x.phone))).toList())));void add(BuildContext c){final n=TextEditingController(),p=TextEditingController();showDialog(context:c,builder:(d)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ظ…ظˆط±ط¯'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„ظ…ظˆط±ط¯')),TextField(controller:p,decoration:const InputDecoration(labelText:'ط±ظ‚ظ… ط§ظ„طھظˆط§طµظ„'))]),actions:[FilledButton(onPressed:(){if(n.text.isNotEmpty){s.suppliers.add(Supplier(n.text,p.text));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))]));}}
+  @override
+  Widget build(BuildContext context) {
+    final pages = [
+      dashboard(),
+      production(),
+      warehousesPage(),
+      management(),
+    ];
 
-class PrintersPage extends StatelessWidget{const PrintersPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>Scaffold(appBar:AppBar(title:const Text('ط§ظ„ط·ط§ط¨ط¹ط§طھ ظˆط§ظ„ط§طھطµط§ظ„')),floatingActionButton:FloatingActionButton.extended(onPressed:()=>add(c),icon:const Icon(Icons.add),label:const Text('ط¥ط¶ط§ظپط© ط·ط§ط¨ط¹ط©')),body:ListView(padding:const EdgeInsets.all(12),children:[const Card(child:ListTile(leading:Icon(Icons.info_outline),title:Text('ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط§طھطµط§ظ„'),subtitle:Text('ظٹظ…ظƒظ† طھط³ط¬ظٹظ„ ط·ط§ط¨ط¹ط© Bluetooth ط£ظˆ ط·ط§ط¨ط¹ط© Wiâ€‘Fi / ط´ط¨ظƒط©. ط§ظ„ط§طھطµط§ظ„ ظˆط§ظ„ط·ط¨ط§ط¹ط© ط§ظ„ظپط¹ظ„ظٹط© طھطھط·ظ„ط¨ ط­ط²ظ…ط© ظ…طھظˆط§ظپظ‚ط© ظ…ط¹ ظ…ظˆط¯ظٹظ„ ط§ظ„ط·ط§ط¨ط¹ط© ظˆطµظ„ط§ط­ظٹط§طھ Android.'))),...s.printers.map((p)=>Card(child:SwitchListTile(value:p.connected,onChanged:(v){p.connected=v;s.changed();},secondary:Icon(p.type=='Bluetooth'?Icons.bluetooth:Icons.wifi),title:Text(p.name),subtitle:Text('${p.type} â€¢ ${p.address.isEmpty?'ط¨ط¯ظˆظ† ط¹ظ†ظˆط§ظ†':p.address}')))])));void add(BuildContext c){final n=TextEditingController(),a=TextEditingController();String type='Wiâ€‘Fi';showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ط·ط§ط¨ط¹ط©'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„ط·ط§ط¨ط¹ط©')),DropdownButtonFormField(value:type,items:['Wiâ€‘Fi','Bluetooth'].map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>type=v!),decoration:const InputDecoration(labelText:'ظ†ظˆط¹ ط§ظ„ط§طھطµط§ظ„')),TextField(controller:a,decoration:InputDecoration(labelText:type=='Wiâ€‘Fi'?'IP / ط¹ظ†ظˆط§ظ† ط§ظ„ط´ط¨ظƒط©':'ط§ط³ظ… ط£ظˆ ط¹ظ†ظˆط§ظ† Bluetooth'))]),actions:[FilledButton(onPressed:(){if(n.text.isNotEmpty){s.printers.add(PrinterItem(n.text,type,address:a.text));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('غوار الأصلية - إدارة المصنع'),
+          actions: [
+            IconButton(
+              tooltip: 'تسجيل الخروج',
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                  (_) => false,
+                );
+              },
+              icon: const Icon(Icons.logout),
+            ),
+          ],
+        ),
+        body: pages[pageIndex],
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: pageIndex,
+          onDestinationSelected: (value) => setState(() => pageIndex = value),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.dashboard),
+              label: 'الرئيسية',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.precision_manufacturing),
+              label: 'الإنتاج',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.warehouse),
+              label: 'المستودعات',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.admin_panel_settings),
+              label: 'الإدارة',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget dashboard() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        const Text(
+          'لوحة التحكم',
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 14),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            statCard('أقسام الإنتاج', '${sections.length}', Icons.factory),
+            statCard('خطوط الإنتاج', '135', Icons.precision_manufacturing),
+            statCard('المستودعات', '${warehouses.length}', Icons.warehouse),
+            statCard('الأصناف', '${products.length}', Icons.inventory_2),
+            statCard('المستخدمون', '${users.length}', Icons.people),
+            statCard('نقاط البيع', '10', Icons.point_of_sale),
+          ],
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'تنبيهات الإدارة',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        const Card(
+          child: ListTile(
+            leading: Icon(Icons.security, color: Colors.green),
+            title: Text('نظام الدخول والصلاحيات مفعل'),
+            subtitle: Text('المدير الرئيسي يملك جميع الصلاحيات.'),
+          ),
+        ),
+        const Card(
+          child: ListTile(
+            leading: Icon(Icons.info, color: Colors.orange),
+            title: Text('الطابعة والبلوتوث والواي فاي'),
+            subtitle: Text(
+              'واجهات الإعداد جاهزة. الربط الفعلي يضاف بعد اعتماد نوع الأجهزة.',
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget statCard(String title, String value, IconData icon) {
+    return SizedBox(
+      width: 170,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Icon(icon, size: 34, color: const Color(0xFFB71C1C)),
+              const SizedBox(height: 8),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(title, textAlign: TextAlign.center),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget production() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        const Text(
+          'أقسام وخطوط الإنتاج',
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        ...sections.map(
+          (section) => Card(
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: const Color(0xFFFFE7A3),
+                child: Icon(section.icon, color: const Color(0xFF8B0000)),
+              ),
+              title: Text(
+                section.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text('${section.lines} خط إنتاج'),
+              trailing: const Icon(Icons.arrow_back_ios_new),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => LinesPage(section: section),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget warehousesPage() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'المستودعات',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+            ),
+            FilledButton.icon(
+              onPressed: () => snack('إضافة مستودع جديد متاحة للمدير.'),
+              icon: const Icon(Icons.add),
+              label: const Text('إضافة'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ...warehouses.map(
+          (warehouse) => Card(
+            child: ListTile(
+              leading: const Icon(
+                Icons.warehouse,
+                color: Color(0xFFB71C1C),
+                size: 34,
+              ),
+              title: Text(warehouse.name),
+              subtitle: Text('الرصيد التجريبي: ${warehouse.stock} وحدة'),
+              trailing: PopupMenuButton<String>(
+                onSelected: (value) => snack('$value - ${warehouse.name}'),
+                itemBuilder: (_) => const [
+                  PopupMenuItem(value: 'عرض المخزون', child: Text('عرض المخزون')),
+                  PopupMenuItem(value: 'تحويل مخزون', child: Text('تحويل مخزون')),
+                  PopupMenuItem(value: 'تعديل', child: Text('تعديل')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget management() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        const Text(
+          'الإدارة والإعدادات',
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        adminTile(
+          'المستخدمون والصلاحيات',
+          'إنشاء المستخدمين، إيقاف الحساب، تحديد الدور والصلاحيات',
+          Icons.manage_accounts,
+          () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => UsersPage(users: users),
+            ),
+          ),
+        ),
+        adminTile(
+          'المنتجات والتعبئة',
+          'إدارة الأصناف والأوزان والتعبئة',
+          Icons.inventory_2,
+          () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ProductsPage(products: products),
+            ),
+          ),
+        ),
+        adminTile(
+          'المواد الخام والموردون',
+          'إدارة المواد الخام والموردين وحالة التوريد',
+          Icons.local_shipping,
+          () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const RawMaterialsPage()),
+          ),
+        ),
+        adminTile(
+          'الأمن وسجل الدخول',
+          'محاولات الدخول، فتح الحسابات، مراجعة النشاط',
+          Icons.security,
+          () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const SecurityPage()),
+          ),
+        ),
+        adminTile(
+          'الطابعة والاتصال',
+          'إعدادات الطابعة والبلوتوث والواي فاي',
+          Icons.print,
+          () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const ConnectivityPage()),
+          ),
+        ),
+        adminTile(
+          'نقاط البيع والمندوبون',
+          '10 نقاط بيع قابلة للزيادة مع مخزون مستقل لكل مندوب',
+          Icons.point_of_sale,
+          () => snack('قسم نقاط البيع جاهز للإضافة في المرحلة التالية.'),
+        ),
+        adminTile(
+          'المشاركة وواتساب',
+          'إعداد مشاركة التقارير والفواتير',
+          Icons.share,
+          () => snack('الربط الفعلي بواتساب يضاف بعد اعتماد طريقة المشاركة.'),
+        ),
+      ],
+    );
+  }
+
+  Widget adminTile(
+    String title,
+    String subtitle,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
+    return Card(
+      child: ListTile(
+        leading: Icon(icon, color: const Color(0xFFB71C1C), size: 32),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(subtitle),
+        trailing: const Icon(Icons.arrow_back_ios_new),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+class LinesPage extends StatefulWidget {
+  const LinesPage({super.key, required this.section});
+
+  final ProductionSection section;
+
+  @override
+  State<LinesPage> createState() => _LinesPageState();
+}
+
+class _LinesPageState extends State<LinesPage> {
+  final statuses = ['يعمل', 'تجهيز', 'متوقف', 'صيانة'];
+
+  Color statusColor(String status) {
+    switch (status) {
+      case 'يعمل':
+        return Colors.green;
+      case 'تجهيز':
+        return Colors.orange;
+      case 'صيانة':
+        return Colors.blueGrey;
+      default:
+        return Colors.red;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(title: Text(widget.section.name)),
+        body: ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: widget.section.lines,
+          itemBuilder: (context, index) {
+            final status = statuses[index % statuses.length];
+            return Card(
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: statusColor(status),
+                  foregroundColor: Colors.white,
+                  child: Text('${index + 1}'),
+                ),
+                title: Text(
+                  'خط إنتاج ${index + 1}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text('الحالة: $status • المسؤول: غير محدد'),
+                trailing: const Icon(Icons.arrow_back_ios_new),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => LineDetailsPage(
+                        sectionName: widget.section.name,
+                        lineNumber: index + 1,
+                        initialStatus: status,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class LineDetailsPage extends StatefulWidget {
+  const LineDetailsPage({
+    super.key,
+    required this.sectionName,
+    required this.lineNumber,
+    required this.initialStatus,
+  });
+
+  final String sectionName;
+  final int lineNumber;
+  final String initialStatus;
+
+  @override
+  State<LineDetailsPage> createState() => _LineDetailsPageState();
+}
+
+class _LineDetailsPageState extends State<LineDetailsPage> {
+  late String status;
+  final managerController = TextEditingController();
+  final quantityController = TextEditingController(text: '0');
+  final recipeController = TextEditingController();
+  final notesController = TextEditingController();
+  int selectedColor = 0;
+
+  final palette = const [
+    Color(0xFFB71C1C),
+    Color(0xFFD4AF37),
+    Colors.green,
+    Colors.blue,
+    Colors.orange,
+    Colors.deepPurple,
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    status = widget.initialStatus;
+  }
+
+  @override
+  void dispose() {
+    managerController.dispose();
+    quantityController.dispose();
+    recipeController.dispose();
+    notesController.dispose();
+    super.dispose();
+  }
+
+  void save() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('تم حفظ بيانات الخط داخل النسخة التجريبية.')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(title: Text('خط إنتاج ${widget.lineNumber}')),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Container(
+              height: 150,
+              decoration: BoxDecoration(
+                color: palette[selectedColor].withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: palette[selectedColor], width: 2),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.precision_manufacturing,
+                    size: 65,
+                    color: palette[selectedColor],
+                  ),
+                  Text(
+                    widget.sectionName,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              initialValue: status,
+              decoration: const InputDecoration(
+                labelText: 'حالة الخط',
+                border: OutlineInputBorder(),
+              ),
+              items: const [
+                DropdownMenuItem(value: 'يعمل', child: Text('يعمل')),
+                DropdownMenuItem(value: 'تجهيز', child: Text('تجهيز')),
+                DropdownMenuItem(value: 'متوقف', child: Text('متوقف')),
+                DropdownMenuItem(value: 'صيانة', child: Text('صيانة')),
+              ],
+              onChanged: (value) {
+                if (value != null) setState(() => status = value);
+              },
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: managerController,
+              decoration: const InputDecoration(
+                labelText: 'المسؤول عن الخط',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: quantityController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'كمية الإنتاج',
+                suffixText: 'وحدة',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: recipeController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                labelText: 'المقادير / الوصفة / الأوزان',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: notesController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                labelText: 'ملاحظات',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'لون الخط',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 10,
+              children: List.generate(
+                palette.length,
+                (index) => InkWell(
+                  onTap: () => setState(() => selectedColor = index),
+                  child: CircleAvatar(
+                    backgroundColor: palette[index],
+                    child: selectedColor == index
+                        ? const Icon(Icons.check, color: Colors.white)
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'إضافة صورة فعلية للخط ستربط بعد اعتماد مكتبة الصور.',
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add_a_photo),
+              label: const Text('صورة خط الإنتاج'),
+            ),
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              onPressed: save,
+              icon: const Icon(Icons.save),
+              label: const Text('حفظ بيانات الخط'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UsersPage extends StatefulWidget {
+  const UsersPage({super.key, required this.users});
+
+  final List<AppUser> users;
+
+  @override
+  State<UsersPage> createState() => _UsersPageState();
+}
+
+class _UsersPageState extends State<UsersPage> {
+  void addUser() {
+    final name = TextEditingController();
+    final username = TextEditingController();
+    final password = TextEditingController();
+    final role = TextEditingController();
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: const Text('إضافة مستخدم'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: name,
+                  decoration: const InputDecoration(labelText: 'الاسم'),
+                ),
+                TextField(
+                  controller: username,
+                  decoration: const InputDecoration(labelText: 'اسم المستخدم'),
+                ),
+                TextField(
+                  controller: password,
+                  decoration: const InputDecoration(labelText: 'كلمة المرور'),
+                ),
+                TextField(
+                  controller: role,
+                  decoration: const InputDecoration(labelText: 'الدور'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('إلغاء'),
+            ),
+            FilledButton(
+              onPressed: () {
+                if (name.text.trim().isEmpty ||
+                    username.text.trim().isEmpty ||
+                    password.text.isEmpty) {
+                  return;
+                }
+                setState(() {
+                  widget.users.add(
+                    AppUser(
+                      name: name.text.trim(),
+                      username: username.text.trim(),
+                      password: password.text,
+                      role: role.text.trim().isEmpty
+                          ? 'صلاحيات محدودة'
+                          : role.text.trim(),
+                    ),
+                  );
+                });
+                Navigator.pop(dialogContext);
+              },
+              child: const Text('إضافة'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(title: const Text('المستخدمون والصلاحيات')),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: addUser,
+          icon: const Icon(Icons.person_add),
+          label: const Text('مستخدم'),
+        ),
+        body: ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: widget.users.length,
+          itemBuilder: (context, index) {
+            final user = widget.users[index];
+            return Card(
+              child: SwitchListTile(
+                value: user.active,
+                onChanged: index == 0
+                    ? null
+                    : (value) => setState(() => user.active = value),
+                secondary: const CircleAvatar(child: Icon(Icons.person)),
+                title: Text(user.name),
+                subtitle: Text('${user.username}\n${user.role}'),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class ProductsPage extends StatefulWidget {
+  const ProductsPage({super.key, required this.products});
+
+  final List<ProductItem> products;
+
+  @override
+  State<ProductsPage> createState() => _ProductsPageState();
+}
+
+class _ProductsPageState extends State<ProductsPage> {
+  void addProduct() {
+    setState(() {
+      widget.products.add(
+        ProductItem('صنف جديد ${widget.products.length + 1}', 'تعبئة قابلة للتعديل'),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(title: const Text('المنتجات والتعبئة')),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: addProduct,
+          icon: const Icon(Icons.add),
+          label: const Text('إضافة صنف'),
+        ),
+        body: ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: widget.products.length,
+          itemBuilder: (context, index) {
+            final item = widget.products[index];
+            return Card(
+              child: ListTile(
+                leading: const Icon(
+                  Icons.inventory_2,
+                  color: Color(0xFFB71C1C),
+                ),
+                title: Text(item.name),
+                subtitle: Text(item.packaging),
+                trailing: const Icon(Icons.edit),
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('تعديل: ${item.name}')),
+                  );
+                },
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class RawMaterialsPage extends StatelessWidget {
+  const RawMaterialsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const materials = [
+      'دقيق',
+      'زيت',
+      'ملح',
+      'جبن',
+      'لحم',
+      'دجاج',
+      'مواد تغليف',
+    ];
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(title: const Text('المواد الخام والموردون')),
+        body: ListView(
+          padding: const EdgeInsets.all(12),
+          children: [
+            ...materials.map(
+              (item) => Card(
+                child: ListTile(
+                  leading: const Icon(Icons.grain),
+                  title: Text(item),
+                  subtitle: const Text('المخزون والمورد قابلان للتعديل'),
+                ),
+              ),
+            ),
+            const Card(
+              child: ListTile(
+                leading: Icon(Icons.local_shipping),
+                title: Text('الموردون'),
+                subtitle: Text('إضافة الموردين وأرقام التواصل وحالة التوريد'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SecurityPage extends StatelessWidget {
+  const SecurityPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const events = [
+      'نجاح دخول المدير الرئيسي',
+      'تسجيل خروج آمن',
+      'مراقبة محاولات الدخول الفاشلة',
+      'إمكانية تعطيل حسابات المسؤولين',
+      'صلاحيات الأقسام حسب المستخدم',
+    ];
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(title: const Text('الأمن وسجل الدخول')),
+        body: ListView(
+          padding: const EdgeInsets.all(12),
+          children: [
+            const Card(
+              child: ListTile(
+                leading: Icon(Icons.verified_user, color: Colors.green),
+                title: Text('حماية الدخول'),
+                subtitle: Text(
+                  'هذه حماية على مستوى التطبيق. حماية الخادم والتشفير والنسخ الاحتياطي تضاف عند ربط السحابة.',
+                ),
+              ),
+            ),
+            ...events.map(
+              (event) => Card(
+                child: ListTile(
+                  leading: const Icon(Icons.history),
+                  title: Text(event),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ConnectivityPage extends StatefulWidget {
+  const ConnectivityPage({super.key});
+
+  @override
+  State<ConnectivityPage> createState() => _ConnectivityPageState();
+}
+
+class _ConnectivityPageState extends State<ConnectivityPage> {
+  bool wifi = true;
+  bool bluetooth = false;
+  bool printer = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(title: const Text('الطابعة والاتصال')),
+        body: ListView(
+          padding: const EdgeInsets.all(12),
+          children: [
+            SwitchListTile(
+              value: wifi,
+              onChanged: (value) => setState(() => wifi = value),
+              secondary: const Icon(Icons.wifi),
+              title: const Text('واي فاي'),
+              subtitle: const Text('إعداد واجهة الاتصال بالشبكة'),
+            ),
+            SwitchListTile(
+              value: bluetooth,
+              onChanged: (value) => setState(() => bluetooth = value),
+              secondary: const Icon(Icons.bluetooth),
+              title: const Text('بلوتوث'),
+              subtitle: const Text('إعداد واجهة أجهزة البلوتوث'),
+            ),
+            SwitchListTile(
+              value: printer,
+              onChanged: (value) => setState(() => printer = value),
+              secondary: const Icon(Icons.print),
+              title: const Text('الطابعة'),
+              subtitle: const Text('تفعيل إعداد الطابعة التجريبي'),
+            ),
+            const Card(
+              child: ListTile(
+                leading: Icon(Icons.info_outline),
+                title: Text('ملاحظة'),
+                subtitle: Text(
+                  'الربط الفعلي بالطابعة والبلوتوث يحتاج تعريف نوع الطابعة وبروتوكولها قبل إضافة مكتبة الجهاز.',
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
