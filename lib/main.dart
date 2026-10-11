@@ -65,176 +65,18 @@ class _LoginPageState extends State<LoginPage>{
 class Home extends StatefulWidget{const Home(this.store,{super.key});final Store store;@override State<Home> createState()=>_HomeState();}
 class _HomeState extends State<Home>{int tab=0;@override Widget build(BuildContext c){final pages=[Dashboard(widget.store),LinesPage(widget.store),WarehousesPage(widget.store),ProductsPage(widget.store),ManagementPage(widget.store)];return Scaffold(appBar:AppBar(backgroundColor:const Color(0xff8d151b),foregroundColor:Colors.white,title:const Text('ط؛ظˆط§ط± ط§ظ„ط£طµظ„ظٹط© â€¢ ط¥ط¯ط§ط±ط© ط§ظ„ظ…طµظ†ط¹')),body:pages[tab],bottomNavigationBar:NavigationBar(selectedIndex:tab,onDestinationSelected:(v)=>setState(()=>tab=v),destinations:const [NavigationDestination(icon:Icon(Icons.dashboard),label:'ط§ظ„ط±ط¦ظٹط³ظٹط©'),NavigationDestination(icon:Icon(Icons.precision_manufacturing),label:'ط§ظ„ط¥ظ†طھط§ط¬'),NavigationDestination(icon:Icon(Icons.warehouse),label:'ط§ظ„ظ…ط®ط²ظˆظ†'),NavigationDestination(icon:Icon(Icons.inventory_2),label:'ط§ظ„ط£طµظ†ط§ظپ'),NavigationDestination(icon:Icon(Icons.settings),label:'ط§ظ„ط¥ط¯ط§ط±ط©')]));}}
 
-class Dashboard extends StatelessWidget {
-  const Dashboard(this.s, {super.key});
-  final Store s;
-  @override
-  Widget build(BuildContext c) => AnimatedBuilder(
-    animation: s,
-    builder: (_, __) => ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text('ظ„ظˆط­ط© ط¥ط¯ط§ط±ط© ط§ظ„ظ…طµظ†ط¹', style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
-        Wrap(spacing: 8, runSpacing: 8, children: [
-          Stat('ط®ط·ظˆط· ط§ظ„ط¥ظ†طھط§ط¬', '${s.lines.length}', Icons.precision_manufacturing),
-          Stat('ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ', '${s.warehouses.length}', Icons.warehouse),
-          Stat('ط§ظ„ظ…ط³طھط®ط¯ظ…ظˆظ†', '${s.users.length}', Icons.people),
-          Stat('ط³ط¬ظ„ط§طھ ط§ظ„ط¥ظ†طھط§ط¬', '${s.production.length}', Icons.assignment),
-        ]),
-        const SizedBox(height: 15),
-        const Text('ط£ظ‚ط³ط§ظ… ط§ظ„ط¥ظ†طھط§ط¬', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        ...s.categories.map((x) => Card(
-          child: ListTile(
-            leading: const CircleAvatar(child: Icon(Icons.factory)),
-            title: Text(x, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('${s.lines.where((e) => e.category == x).length} ط®ط· ط¥ظ†طھط§ط¬'),
-            trailing: const Icon(Icons.chevron_left),
-            onTap: () => Navigator.push(c, MaterialPageRoute(builder: (_) => CategoryPage(s, x))),
-          ),
-        )),
-      ],
-    ),
-  );
-}
+class Dashboard extends StatelessWidget{const Dashboard(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>ListView(padding:const EdgeInsets.all(16),children:[const Text('ظ„ظˆط­ط© ط¥ط¯ط§ط±ط© ط§ظ„ظ…طµظ†ط¹',style:TextStyle(fontSize:27,fontWeight:FontWeight.bold)),Wrap(spacing:8,runSpacing:8,children:[Stat('ط®ط·ظˆط· ط§ظ„ط¥ظ†طھط§ط¬','${s.lines.length}',Icons.precision_manufacturing),Stat('ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ','${s.warehouses.length}',Icons.warehouse),Stat('ط§ظ„ظ…ط³طھط®ط¯ظ…ظˆظ†','${s.users.length}',Icons.people),Stat('ط³ط¬ظ„ط§طھ ط§ظ„ط¥ظ†طھط§ط¬','${s.production.length}',Icons.assignment)]),const SizedBox(height:15),const Text('ط£ظ‚ط³ط§ظ… ط§ظ„ط¥ظ†طھط§ط¬',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),...s.categories.map((x)=>Card(child:ListTile(leading:const CircleAvatar(child:Icon(Icons.factory)),title:Text(x,style:const TextStyle(fontWeight:FontWeight.bold)),subtitle:Text('${s.lines.where((e)=>e.category==x).length} ط®ط· ط¥ظ†طھط§ط¬'),trailing:const Icon(Icons.chevron_left),onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>CategoryPage(s,x)))))]));}
 class Stat extends StatelessWidget{const Stat(this.t,this.v,this.i,{super.key});final String t,v;final IconData i;@override Widget build(BuildContext c)=>Card(child:Padding(padding:const EdgeInsets.all(14),child:Row(mainAxisSize:MainAxisSize.min,children:[Icon(i),const SizedBox(width:8),Column(children:[Text(v,style:const TextStyle(fontSize:22,fontWeight:FontWeight.bold)),Text(t)])])));}
 class CategoryPage extends StatelessWidget{const CategoryPage(this.s,this.cat,{super.key});final Store s;final String cat;@override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:Text(cat)),body:AnimatedBuilder(animation:s,builder:(_,__)=>ListView(children:s.lines.where((x)=>x.category==cat).map((x)=>ListTile(title:Text(x.name),subtitle:Text('ط§ظ„ظ…ط³ط¤ظˆظ„: ${x.manager} â€¢ ط§ظ„ط¥ظ†طھط§ط¬: ${x.quantity.toStringAsFixed(0)} ${x.unit}'),trailing:const Icon(Icons.chevron_left),onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>LineDetails(s,x))))).toList())));}
 
-class LinesPage extends StatefulWidget {
-  const LinesPage(this.s, {super.key});
-  final Store s;
-  @override State<LinesPage> createState() => _LinesPageState();
-}
-class _LinesPageState extends State<LinesPage> {
-  String filter = 'ط§ظ„ظƒظ„';
-  @override
-  Widget build(BuildContext c) => AnimatedBuilder(
-    animation: widget.s,
-    builder: (_, __) {
-      final list = filter == 'ط§ظ„ظƒظ„' ? widget.s.lines : widget.s.lines.where((x) => x.category == filter).toList();
-      return ListView(padding: const EdgeInsets.all(12), children: [
-        Row(children: [
-          const Expanded(child: Text('ط®ط·ظˆط· ط§ظ„ط¥ظ†طھط§ط¬', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold))),
-          FilledButton.icon(onPressed: () => addLine(c), icon: const Icon(Icons.add), label: const Text('ط¥ط¶ط§ظپط© ط®ط·')),
-        ]),
-        DropdownButtonFormField<String>(
-          value: filter,
-          decoration: const InputDecoration(labelText: 'ط§ظ„ظ‚ط³ظ…'),
-          items: [
-            const DropdownMenuItem<String>(value: 'ط§ظ„ظƒظ„', child: Text('ظƒظ„ ط§ظ„ط£ظ‚ط³ط§ظ…')),
-            ...widget.s.categories.map((x) => DropdownMenuItem<String>(value: x, child: Text(x))),
-          ],
-          onChanged: (v) { if (v != null) setState(() => filter = v); },
-        ),
-        ...list.map((x) => Card(child: ListTile(
-          title: Text(x.name), subtitle: Text('${x.category} â€¢ ${x.manager}'),
-          trailing: const Icon(Icons.chevron_left),
-          onTap: () => Navigator.push(c, MaterialPageRoute(builder: (_) => LineDetails(widget.s, x))),
-        ))),
-      ]);
-    },
-  );
-
-  void addLine(BuildContext c) {
-    final n = TextEditingController();
-    String cat = widget.s.categories.first;
-    showDialog(context: c, builder: (d) => StatefulBuilder(builder: (d, setD) => AlertDialog(
-      title: const Text('ط¥ط¶ط§ظپط© ط®ط· ط¥ظ†طھط§ط¬'),
-      content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: n, decoration: const InputDecoration(labelText: 'ط§ط³ظ… ط§ظ„ط®ط·')),
-        DropdownButtonFormField<String>(
-          value: cat,
-          items: widget.s.categories.map((x) => DropdownMenuItem<String>(value: x, child: Text(x))).toList(),
-          onChanged: (v) { if (v != null) setD(() => cat = v); },
-          decoration: const InputDecoration(labelText: 'ط§ظ„ظ‚ط³ظ…'),
-        ),
-      ]),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(d), child: const Text('ط¥ظ„ط؛ط§ط،')),
-        FilledButton(onPressed: () { if (n.text.trim().isNotEmpty) widget.s.addLine(LineItem(n.text.trim(), cat)); Navigator.pop(d); }, child: const Text('ط­ظپط¸')),
-      ],
-    )));
-  }
-}
+class LinesPage extends StatefulWidget{const LinesPage(this.s,{super.key});final Store s;@override State<LinesPage> createState()=>_LinesPageState();}
+class _LinesPageState extends State<LinesPage>{String? filter;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:widget.s,builder:(_,__){final list=filter==null?widget.s.lines:widget.s.lines.where((x)=>x.category==filter).toList();return ListView(padding:const EdgeInsets.all(12),children:[Row(children:[const Expanded(child:Text('ط®ط·ظˆط· ط§ظ„ط¥ظ†طھط§ط¬',style:TextStyle(fontSize:26,fontWeight:FontWeight.bold))),FilledButton.icon(onPressed:()=>addLine(c),icon:const Icon(Icons.add),label:const Text('ط¥ط¶ط§ظپط© ط®ط·'))]),DropdownButtonFormField<String>(value:filter,decoration:const InputDecoration(labelText:'ط§ظ„ظ‚ط³ظ…'),items:[const DropdownMenuItem<String>(value:null,child:Text('ظƒظ„ ط§ظ„ط£ظ‚ط³ط§ظ…')),...widget.s.categories.map((x)=>DropdownMenuItem(value:x,child:Text(x)))],onChanged:(v)=>setState(()=>filter=v)),...list.map((x)=>Card(child:ListTile(title:Text(x.name),subtitle:Text('${x.category} â€¢ ${x.manager}'),trailing:const Icon(Icons.chevron_left),onTap:()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>LineDetails(widget.s,x)))))]);});void addLine(BuildContext c){final n=TextEditingController();String cat=widget.s.categories.first;showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ط®ط· ط¥ظ†طھط§ط¬'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„ط®ط·')),DropdownButtonFormField(value:cat,items:widget.s.categories.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>cat=v!),decoration:const InputDecoration(labelText:'ط§ظ„ظ‚ط³ظ…'))]),actions:[TextButton(onPressed:()=>Navigator.pop(d),child:const Text('ط¥ظ„ط؛ط§ط،')),FilledButton(onPressed:(){if(n.text.trim().isNotEmpty)widget.s.addLine(LineItem(n.text.trim(),cat));Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
 
 class LineDetails extends StatelessWidget{const LineDetails(this.s,this.line,{super.key});final Store s;final LineItem line;@override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:Text(line.name)),body:AnimatedBuilder(animation:s,builder:(_,__)=>ListView(padding:const EdgeInsets.all(16),children:[Card(child:ListTile(title:Text(line.category),subtitle:Text('ط§ظ„ط­ط§ظ„ط©: ${line.status}\nط§ظ„ظ…ط³ط¤ظˆظ„: ${line.manager}\nط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ط¥ظ†طھط§ط¬: ${line.quantity.toStringAsFixed(0)} ${line.unit}'),isThreeLine:true)),FilledButton.icon(onPressed:()=>addProduction(c),icon:const Icon(Icons.add_chart),label:const Text('ط¥ط¶ط§ظپط© ظƒظ…ظٹط© ط¥ظ†طھط§ط¬')),const SizedBox(height:8),OutlinedButton.icon(onPressed:()=>editManager(c),icon:const Icon(Icons.person),label:const Text('طھط­ط¯ظٹط¯ ظ…ط¯ظٹط± / ظ…ط³ط¤ظˆظ„ ط§ظ„ط®ط·')),const SizedBox(height:16),const Text('ط³ط¬ظ„ ط¥ظ†طھط§ط¬ ط§ظ„ط®ط·',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),...s.production.where((e)=>e.line==line.name).map((e)=>Card(child:ListTile(title:Text(e.product),subtitle:Text('${e.quantity.toStringAsFixed(0)} ${e.unit} â€¢ ${e.date}'))))])));void addProduction(BuildContext c){final q=TextEditingController();final choices=s.products.where((p)=>p.category==line.category).map((p)=>p.name).toList();if(choices.isEmpty)choices.add('ط¥ظ†طھط§ط¬ ط¹ط§ظ…');String product=choices.first;showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('طھط³ط¬ظٹظ„ ظƒظ…ظٹط© ط¥ظ†طھط§ط¬'),content:Column(mainAxisSize:MainAxisSize.min,children:[DropdownButtonFormField(value:product,items:choices.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>product=v!),decoration:const InputDecoration(labelText:'ط§ظ„طµظ†ظپ')),TextField(controller:q,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'ط§ظ„ظƒظ…ظٹط©')),DropdownButtonFormField(value:line.unit,items:['ظƒط±طھظˆظ†','ظƒظٹط³','ط­ط¨ط©','ظƒط¬ظ…'].map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v){line.unit=v!;},decoration:const InputDecoration(labelText:'ط§ظ„ظˆط­ط¯ط©'))]),actions:[FilledButton(onPressed:(){final n=double.tryParse(q.text);if(n!=null&&n>0){final now=DateTime.now();s.addProduction(ProductionEntry(line.name,product,n,line.unit,'${now.year}/${now.month}/${now.day}'),line);Navigator.pop(d);}},child:const Text('ط­ظپط¸ ط§ظ„ظƒظ…ظٹط©'))])));}void editManager(BuildContext c){String manager=line.manager;final names=['ط؛ظٹط± ظ…ط­ط¯ط¯',...s.users.where((u)=>u.active).map((u)=>u.name)];showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ظ…ط³ط¤ظˆظ„ ط§ظ„ط®ط·'),content:DropdownButtonFormField(value:names.contains(manager)?manager:'ط؛ظٹط± ظ…ط­ط¯ط¯',items:names.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>manager=v!),decoration:const InputDecoration(labelText:'ط§ط®طھط± ط§ظ„ظ…ط³ط¤ظˆظ„')),actions:[FilledButton(onPressed:(){line.manager=manager;s.changed();Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
 
-class WarehousesPage extends StatelessWidget {
-  const WarehousesPage(this.s, {super.key});
-  final Store s;
-  @override
-  Widget build(BuildContext c) => AnimatedBuilder(
-    animation: s,
-    builder: (_, __) => ListView(
-      padding: const EdgeInsets.all(12),
-      children: [
-        const Text('ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ ظˆط§ظ„طھط­ظˆظٹظ„', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-        ...s.warehouses.map((w) => Card(child: ListTile(
-          leading: const Icon(Icons.warehouse), title: Text(w.name),
-          subtitle: Text('ط§ظ„ط±طµظٹط¯ ط§ظ„ط¹ط§ظ…: ${w.quantity.toStringAsFixed(0)}'),
-          trailing: PopupMenuButton<int>(
-            itemBuilder: (_) => const [
-              PopupMenuItem<int>(value: 1, child: Text('ط¥ط¶ط§ظپط© ظƒظ…ظٹط©')),
-              PopupMenuItem<int>(value: 2, child: Text('طھط­ظˆظٹظ„ ظ„ظ…ط³طھظˆط¯ط¹')),
-            ],
-            onSelected: (v) { if (v == 1) { quantity(c, w); } else { transfer(c, w); } },
-          ),
-        ))),
-      ],
-    ),
-  );
-  void quantity(BuildContext c, Warehouse w) {
-    final q = TextEditingController();
-    showDialog(context: c, builder: (d) => AlertDialog(
-      title: Text('ط¥ط¶ط§ظپط© ظƒظ…ظٹط© â€¢ ${w.name}'),
-      content: TextField(controller: q, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'ط§ظ„ظƒظ…ظٹط©')),
-      actions: [FilledButton(onPressed: () { final n = double.tryParse(q.text); if (n != null) { w.quantity += n; s.changed(); } Navigator.pop(d); }, child: const Text('ط­ظپط¸'))],
-    ));
-  }
-  void transfer(BuildContext c, Warehouse from) {
-    final q = TextEditingController();
-    Warehouse to = s.warehouses.firstWhere((x) => x != from, orElse: () => from);
-    showDialog(context: c, builder: (d) => StatefulBuilder(builder: (d, setD) => AlertDialog(
-      title: const Text('طھط­ظˆظٹظ„ ط¨ظٹظ† ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ'),
-      content: Column(mainAxisSize: MainAxisSize.min, children: [
-        DropdownButtonFormField<Warehouse>(
-          value: to,
-          items: s.warehouses.where((x) => x != from).map((x) => DropdownMenuItem<Warehouse>(value: x, child: Text(x.name))).toList(),
-          onChanged: (v) { if (v != null) setD(() => to = v); },
-          decoration: const InputDecoration(labelText: 'ط¥ظ„ظ‰'),
-        ),
-        TextField(controller: q, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'ط§ظ„ظƒظ…ظٹط©')),
-      ]),
-      actions: [FilledButton(onPressed: () { final n = double.tryParse(q.text); if (n != null && n > 0 && from.quantity >= n) { from.quantity -= n; to.quantity += n; s.changed(); Navigator.pop(d); } }, child: const Text('طھط­ظˆظٹظ„'))],
-    )));
-  }
-}
+class WarehousesPage extends StatelessWidget{const WarehousesPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>ListView(padding:const EdgeInsets.all(12),children:[const Text('ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ ظˆط§ظ„طھط­ظˆظٹظ„',style:TextStyle(fontSize:25,fontWeight:FontWeight.bold)),...s.warehouses.map((w)=>Card(child:ListTile(leading:const Icon(Icons.warehouse),title:Text(w.name),subtitle:Text('ط§ظ„ط±طµظٹط¯ ط§ظ„ط¹ط§ظ…: ${w.quantity.toStringAsFixed(0)}'),trailing:PopupMenuButton(itemBuilder:(_)=>const [PopupMenuItem(value:1,child:Text('ط¥ط¶ط§ظپط© ظƒظ…ظٹط©')),PopupMenuItem(value:2,child:Text('طھط­ظˆظٹظ„ ظ„ظ…ط³طھظˆط¯ط¹'))],onSelected:(v)=>v==1?quantity(c,w):transfer(c,w))))]));void quantity(BuildContext c,Warehouse w){final q=TextEditingController();showDialog(context:c,builder:(d)=>AlertDialog(title:Text('ط¥ط¶ط§ظپط© ظƒظ…ظٹط© â€¢ ${w.name}'),content:TextField(controller:q,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'ط§ظ„ظƒظ…ظٹط©')),actions:[FilledButton(onPressed:(){final n=double.tryParse(q.text);if(n!=null){w.quantity+=n;s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))]));}void transfer(BuildContext c,Warehouse from){final q=TextEditingController();Warehouse to=s.warehouses.firstWhere((x)=>x!=from,orElse:()=>from);showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('طھط­ظˆظٹظ„ ط¨ظٹظ† ط§ظ„ظ…ط³طھظˆط¯ط¹ط§طھ'),content:Column(mainAxisSize:MainAxisSize.min,children:[DropdownButtonFormField(value:to,items:s.warehouses.where((x)=>x!=from).map((x)=>DropdownMenuItem(value:x,child:Text(x.name))).toList(),onChanged:(v)=>setD(()=>to=v!),decoration:const InputDecoration(labelText:'ط¥ظ„ظ‰')),TextField(controller:q,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'ط§ظ„ظƒظ…ظٹط©'))]),actions:[FilledButton(onPressed:(){final n=double.tryParse(q.text);if(n!=null&&n>0&&from.quantity>=n){from.quantity-=n;to.quantity+=n;s.changed();Navigator.pop(d);}},child:const Text('طھط­ظˆظٹظ„'))])));}}
 
-class ProductsPage extends StatelessWidget {
-  const ProductsPage(this.s, {super.key});
-  final Store s;
-  @override
-  Widget build(BuildContext c) => AnimatedBuilder(
-    animation: s,
-    builder: (_, __) => ListView(padding: const EdgeInsets.all(12), children: [
-      Row(children: [
-        const Expanded(child: Text('ط§ظ„ط£طµظ†ط§ظپ', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
-        FilledButton.icon(onPressed: () => add(c), icon: const Icon(Icons.add), label: const Text('ط¥ط¶ط§ظپط©')),
-      ]),
-      ...s.products.map((p) => Card(child: ListTile(title: Text(p.name), subtitle: Text('${p.category} â€¢ ${p.weight} â€¢ ${p.pack}')))),
-    ]),
-  );
-  void add(BuildContext c) {
-    final n = TextEditingController(); String cat = s.categories.first;
-    showDialog(context: c, builder: (d) => StatefulBuilder(builder: (d, setD) => AlertDialog(
-      title: const Text('ط¥ط¶ط§ظپط© طµظ†ظپ'),
-      content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: n, decoration: const InputDecoration(labelText: 'ط§ط³ظ… ط§ظ„طµظ†ظپ')),
-        DropdownButtonFormField<String>(value: cat, items: s.categories.map((x) => DropdownMenuItem<String>(value: x, child: Text(x))).toList(), onChanged: (v) { if (v != null) setD(() => cat = v); }, decoration: const InputDecoration(labelText: 'ط§ظ„ظ‚ط³ظ…')),
-      ]),
-      actions: [FilledButton(onPressed: () { if (n.text.trim().isNotEmpty) { s.products.add(Product(n.text.trim(), cat, 'ظٹط­ط¯ط¯ ظ„ط§ط­ظ‚ط§ظ‹')); s.changed(); } Navigator.pop(d); }, child: const Text('ط­ظپط¸'))],
-    )));
-  }
-}
+class ProductsPage extends StatelessWidget{const ProductsPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>ListView(padding:const EdgeInsets.all(12),children:[Row(children:[const Expanded(child:Text('ط§ظ„ط£طµظ†ط§ظپ',style:TextStyle(fontSize:25,fontWeight:FontWeight.bold))),FilledButton.icon(onPressed:()=>add(c),icon:const Icon(Icons.add),label:const Text('ط¥ط¶ط§ظپط©'))]),...s.products.map((p)=>Card(child:ListTile(title:Text(p.name),subtitle:Text('${p.category} â€¢ ${p.weight} â€¢ ${p.pack}'))))]));void add(BuildContext c){final n=TextEditingController();String cat=s.categories.first;showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© طµظ†ظپ'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„طµظ†ظپ')),DropdownButtonFormField(value:cat,items:s.categories.map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>cat=v!),decoration:const InputDecoration(labelText:'ط§ظ„ظ‚ط³ظ…'))]),actions:[FilledButton(onPressed:(){if(n.text.trim().isNotEmpty){s.products.add(Product(n.text.trim(),cat,'ظٹط­ط¯ط¯ ظ„ط§ط­ظ‚ط§ظ‹'));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
 
 class ManagementPage extends StatelessWidget{const ManagementPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>ListView(padding:const EdgeInsets.all(12),children:[const Text('ط§ظ„ط¥ط¯ط§ط±ط© ظˆط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ',style:TextStyle(fontSize:26,fontWeight:FontWeight.bold)),Tile('ط§ظ„ظ…ط³طھط®ط¯ظ…ظˆظ† ظˆط§ظ„طµظ„ط§ط­ظٹط§طھ',Icons.manage_accounts,()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>UsersPage(s)))),Tile('ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ط®ط§ظ…',Icons.grain,()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>RawMaterialsPage(s)))),Tile('ط§ظ„ظ…ظˆط±ط¯ظˆظ†',Icons.local_shipping,()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>SuppliersPage(s)))),Tile('ط§ظ„ط·ط§ط¨ط¹ط§طھ ظˆ Wiâ€‘Fi ظˆ Bluetooth',Icons.print,()=>Navigator.push(c,MaterialPageRoute(builder:(_)=>PrintersPage(s))))]);}
 class Tile extends StatelessWidget{const Tile(this.t,this.i,this.tap,{super.key});final String t;final IconData i;final VoidCallback tap;@override Widget build(BuildContext c)=>Card(child:ListTile(leading:Icon(i),title:Text(t),trailing:const Icon(Icons.chevron_left),onTap:tap));}
@@ -244,35 +86,4 @@ class UsersPage extends StatelessWidget{const UsersPage(this.s,{super.key});fina
 class RawMaterialsPage extends StatelessWidget{const RawMaterialsPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>Scaffold(appBar:AppBar(title:const Text('ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ط®ط§ظ…')),floatingActionButton:FloatingActionButton(onPressed:()=>add(c),child:const Icon(Icons.add)),body:ListView(children:s.rawMaterials.map((x)=>ListTile(title:Text(x.name),subtitle:Text('${x.quantity} ${x.unit}'))).toList())));void add(BuildContext c){final n=TextEditingController(),q=TextEditingController();showDialog(context:c,builder:(d)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ظ…ط§ط¯ط© ط®ط§ظ…'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ظ„ظ…ط§ط¯ط©')),TextField(controller:q,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'ط§ظ„ظƒظ…ظٹط©'))]),actions:[FilledButton(onPressed:(){final v=double.tryParse(q.text)??0;if(n.text.isNotEmpty){s.rawMaterials.add(RawMaterial(n.text,v,'ظƒط¬ظ…'));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))]));}}
 class SuppliersPage extends StatelessWidget{const SuppliersPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>Scaffold(appBar:AppBar(title:const Text('ط§ظ„ظ…ظˆط±ط¯ظˆظ†')),floatingActionButton:FloatingActionButton(onPressed:()=>add(c),child:const Icon(Icons.add)),body:ListView(children:s.suppliers.map((x)=>ListTile(title:Text(x.name),subtitle:Text(x.phone))).toList())));void add(BuildContext c){final n=TextEditingController(),p=TextEditingController();showDialog(context:c,builder:(d)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ظ…ظˆط±ط¯'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„ظ…ظˆط±ط¯')),TextField(controller:p,decoration:const InputDecoration(labelText:'ط±ظ‚ظ… ط§ظ„طھظˆط§طµظ„'))]),actions:[FilledButton(onPressed:(){if(n.text.isNotEmpty){s.suppliers.add(Supplier(n.text,p.text));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))]));}}
 
-class PrintersPage extends StatelessWidget {
-  const PrintersPage(this.s, {super.key});
-  final Store s;
-  @override
-  Widget build(BuildContext c) => AnimatedBuilder(
-    animation: s,
-    builder: (_, __) => Scaffold(
-      appBar: AppBar(title: const Text('ط§ظ„ط·ط§ط¨ط¹ط§طھ ظˆط§ظ„ط§طھطµط§ظ„')),
-      floatingActionButton: FloatingActionButton.extended(onPressed: () => add(c), icon: const Icon(Icons.add), label: const Text('ط¥ط¶ط§ظپط© ط·ط§ط¨ط¹ط©')),
-      body: ListView(padding: const EdgeInsets.all(12), children: [
-        const Card(child: ListTile(leading: Icon(Icons.info_outline), title: Text('ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط§طھطµط§ظ„'), subtitle: Text('ظٹظ…ظƒظ† طھط³ط¬ظٹظ„ ط·ط§ط¨ط¹ط© Bluetooth ط£ظˆ ط·ط§ط¨ط¹ط© Wiâ€‘Fi / ط´ط¨ظƒط©. ط§ظ„ط§طھطµط§ظ„ ظˆط§ظ„ط·ط¨ط§ط¹ط© ط§ظ„ظپط¹ظ„ظٹط© طھطھط·ظ„ط¨ ط­ط²ظ…ط© ظ…طھظˆط§ظپظ‚ط© ظ…ط¹ ظ…ظˆط¯ظٹظ„ ط§ظ„ط·ط§ط¨ط¹ط© ظˆطµظ„ط§ط­ظٹط§طھ Android.'))),
-        ...s.printers.map((p) => Card(child: SwitchListTile(
-          value: p.connected, onChanged: (v) { p.connected = v; s.changed(); },
-          secondary: Icon(p.type == 'Bluetooth' ? Icons.bluetooth : Icons.wifi),
-          title: Text(p.name), subtitle: Text('${p.type} â€¢ ${p.address.isEmpty ? 'ط¨ط¯ظˆظ† ط¹ظ†ظˆط§ظ†' : p.address}'),
-        ))),
-      ]),
-    ),
-  );
-  void add(BuildContext c) {
-    final n = TextEditingController(), a = TextEditingController(); String type = 'Wiâ€‘Fi';
-    showDialog(context: c, builder: (d) => StatefulBuilder(builder: (d, setD) => AlertDialog(
-      title: const Text('ط¥ط¶ط§ظپط© ط·ط§ط¨ط¹ط©'),
-      content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: n, decoration: const InputDecoration(labelText: 'ط§ط³ظ… ط§ظ„ط·ط§ط¨ط¹ط©')),
-        DropdownButtonFormField<String>(value: type, items: ['Wiâ€‘Fi','Bluetooth'].map((x) => DropdownMenuItem<String>(value: x, child: Text(x))).toList(), onChanged: (v) { if (v != null) setD(() => type = v); }, decoration: const InputDecoration(labelText: 'ظ†ظˆط¹ ط§ظ„ط§طھطµط§ظ„')),
-        TextField(controller: a, decoration: InputDecoration(labelText: type == 'Wiâ€‘Fi' ? 'IP / ط¹ظ†ظˆط§ظ† ط§ظ„ط´ط¨ظƒط©' : 'ط§ط³ظ… ط£ظˆ ط¹ظ†ظˆط§ظ† Bluetooth')),
-      ]),
-      actions: [FilledButton(onPressed: () { if (n.text.isNotEmpty) { s.printers.add(PrinterItem(n.text, type, address: a.text)); s.changed(); } Navigator.pop(d); }, child: const Text('ط­ظپط¸'))],
-    )));
-  }
-}
+class PrintersPage extends StatelessWidget{const PrintersPage(this.s,{super.key});final Store s;@override Widget build(BuildContext c)=>AnimatedBuilder(animation:s,builder:(_,__)=>Scaffold(appBar:AppBar(title:const Text('ط§ظ„ط·ط§ط¨ط¹ط§طھ ظˆط§ظ„ط§طھطµط§ظ„')),floatingActionButton:FloatingActionButton.extended(onPressed:()=>add(c),icon:const Icon(Icons.add),label:const Text('ط¥ط¶ط§ظپط© ط·ط§ط¨ط¹ط©')),body:ListView(padding:const EdgeInsets.all(12),children:[const Card(child:ListTile(leading:Icon(Icons.info_outline),title:Text('ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط§طھطµط§ظ„'),subtitle:Text('ظٹظ…ظƒظ† طھط³ط¬ظٹظ„ ط·ط§ط¨ط¹ط© Bluetooth ط£ظˆ ط·ط§ط¨ط¹ط© Wiâ€‘Fi / ط´ط¨ظƒط©. ط§ظ„ط§طھطµط§ظ„ ظˆط§ظ„ط·ط¨ط§ط¹ط© ط§ظ„ظپط¹ظ„ظٹط© طھطھط·ظ„ط¨ ط­ط²ظ…ط© ظ…طھظˆط§ظپظ‚ط© ظ…ط¹ ظ…ظˆط¯ظٹظ„ ط§ظ„ط·ط§ط¨ط¹ط© ظˆطµظ„ط§ط­ظٹط§طھ Android.'))),...s.printers.map((p)=>Card(child:SwitchListTile(value:p.connected,onChanged:(v){p.connected=v;s.changed();},secondary:Icon(p.type=='Bluetooth'?Icons.bluetooth:Icons.wifi),title:Text(p.name),subtitle:Text('${p.type} â€¢ ${p.address.isEmpty?'ط¨ط¯ظˆظ† ط¹ظ†ظˆط§ظ†':p.address}')))])));void add(BuildContext c){final n=TextEditingController(),a=TextEditingController();String type='Wiâ€‘Fi';showDialog(context:c,builder:(d)=>StatefulBuilder(builder:(d,setD)=>AlertDialog(title:const Text('ط¥ط¶ط§ظپط© ط·ط§ط¨ط¹ط©'),content:Column(mainAxisSize:MainAxisSize.min,children:[TextField(controller:n,decoration:const InputDecoration(labelText:'ط§ط³ظ… ط§ظ„ط·ط§ط¨ط¹ط©')),DropdownButtonFormField(value:type,items:['Wiâ€‘Fi','Bluetooth'].map((x)=>DropdownMenuItem(value:x,child:Text(x))).toList(),onChanged:(v)=>setD(()=>type=v!),decoration:const InputDecoration(labelText:'ظ†ظˆط¹ ط§ظ„ط§طھطµط§ظ„')),TextField(controller:a,decoration:InputDecoration(labelText:type=='Wiâ€‘Fi'?'IP / ط¹ظ†ظˆط§ظ† ط§ظ„ط´ط¨ظƒط©':'ط§ط³ظ… ط£ظˆ ط¹ظ†ظˆط§ظ† Bluetooth'))]),actions:[FilledButton(onPressed:(){if(n.text.isNotEmpty){s.printers.add(PrinterItem(n.text,type,address:a.text));s.changed();}Navigator.pop(d);},child:const Text('ط­ظپط¸'))])));}}
